@@ -1,0 +1,1183 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Event Calendar{% endblock title %}
+
+{% block extracss %}
+  <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
+{% endblock extracss %}
+
+{% block breadcrumb %}
+  <div>
+      <h1><i class="fa fa-calendar"></i> Calendar</h1>
+      <p>Event Calendar</p>
+  </div>
+  <ul class="app-breadcrumb breadcrumb">
+      <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
+      <li class="breadcrumb-item"><a href="#">Calendar</a></li>
+  </ul>
+{% endblock breadcrumb %}
+
+
+{% block content %}
+<div class="row">
+        <style>
+        .modal-dialog{
+            overflow-y: initial !important;
+            margin-top: 60px;
+        }
+        .modal-body{
+            height: 60vh;
+            overflow-y: auto;
+        }
+        hr{
+            color: #fff;
+        }
+    </style>
+    <div class="col-md-12">
+        <div class="tile row">
+            <div class="col-md-3">
+                <div id="external-events">
+                    <h4 class="mb-4">Running Events</h4>
+                    {% for event in events_month %}
+                      <div class="fc-event">
+                          <h3>{{ event.title }}</h3>
+                          <p>{{ event.description }}</p>
+                          <p>{{event.id}}</p>
+                          <p>From: {{ event.start_time }}</p>
+                          <p>To: {{ event.end_time }}</p>
+                      </div>
+                    {% empty %}
+                      <p>No Running Events Found</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title text-white" id="exampleModalLongTitle">Add New Event</h5>
+                            <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post" enctype='multipart/form-data' >
+                        {% csrf_token %}
+                        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+                        <div id="accordion">
+                            <!-- Event Details -->
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" onclick="event.preventDefault();" style="font-weight: bold;">
+                                        Events
+                                    </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="recipient-name" class="col-form-label">Event Title:</label>
+                                                <input type="text" name="title" maxlength="200" required="" id="id_title">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message-text" class="col-form-label">Description:</label>
+                                                <textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message-text" class="col-form-label">Start Date:</label>
+                                                <input type="datetime-local" name="start_time" required="" id="id_start_time">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="message-text" class="col-form-label">End Date:</label>
+                                                <input type="datetime-local" name="end_time" required="" id="id_end_time">
+                                            </div>
+                                        </div>
+
+                                        <button id="nextButton" type="button" class="btn btn-primary" style="float: right; margin-right: 50px;
+                                                margin-bottom: 20px;">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Client Details -->
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" onclick="event.preventDefault();" style="font-weight: bold;">
+                                        Clients
+                                    </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="alien_number" class="col-form-label">Alien Number:</label>
+                                                <input type="text" name="alien_number" class="form-control" id="alien_number">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="full_name" class="col-form-label">Full Name:</label>
+                                                <input type="text" name="full_name" class="form-control" id="full_name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_identity" class="col-form-label">Identity:</label>
+                                                <input type="text" name="client_identity" class="form-control" id="client_identity">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_gender" class="col-form-label">Gender:</label>
+                                                <input type="text" name="client_gender" class="form-control" id="client_gender">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_phone_number" class="col-form-label">Phone Number:</label>
+                                                <input type="text" name="client_phone_number" class="form-control" id="client_phone_number">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_email" class="col-form-label">Email:</label>
+                                                <input type="text" name="client_email" class="form-control" id="client_email">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_address1" class="col-form-label">Address 1:</label>
+                                                <input type="text" name="client_address1" class="form-control" id="client_address1">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_address2" class="col-form-label">Address 2:</label>
+                                                <input type="text" name="client_address2" class="form-control" id="client_address2">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_city" class="col-form-label">City:</label>
+                                                <input type="text" name="client_city" class="form-control" id="client_city">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_postcode" class="col-form-label">Postcode:</label>
+                                                <input type="text" name="client_postcode" class="form-control" id="client_postcode">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_state" class="col-form-label">State:</label>
+                                                <input type="text" name="client_state" class="form-control" id="client_state">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_country" class="col-form-label">Country:</label>
+                                                <input type="text" name="client_country" class="form-control" id="client_country">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_remark" class="col-form-label">Remark:</label>
+                                                <input type="text" name="client_remark" class="form-control" id="client_remark">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_fullname" class="col-form-label">Agent Fullname:</label>
+                                                <input type="text" name="agent_fullname" class="form-control" id="agent_fullname">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_ph" class="col-form-label">Agent Phone:</label>
+                                                <input type="text" name="agent_ph" class="form-control" id="agent_ph">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_identity" class="col-form-label">Agent Identity:</label>
+                                                <input type="text" name="agent_identity" class="form-control" id="agent_identity">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="agent_latitude" class="col-form-label">Latitude:</label>
+                                                <input type="text" name="agent_latitude" class="form-control" id="agent_latitude">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_longitude" class="col-form-label">longitude:</label>
+                                                <input type="text" name="agent_longitude" class="form-control" id="agent_longitude">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="client_role_created_at" class="col-form-label">Created At:</label>
+                                                <input type="datetime-local" name="client_role_created_at" class="form-control" id="client_role_created_at">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_role" class="col-form-label">Client Role:</label>
+                                                <input type="text" name="client_role" class="form-control" id="client_role">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_role_description" class="col-form-label">Client Role Description:</label>
+                                                <input type="text" name="client_role_description" class="form-control" id="client_role_description">
+                                            </div>
+
+                                        </div>
+                                        <button id="nextButton2" type="button" class="btn btn-primary" style="float: right; margin-right: 50px;
+                                                margin-bottom: 20px;">Next</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        <!-- Case Details -->
+                        <div class="card">
+                            <div class="card-header" id="headingFive">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive" onclick="event.preventDefault();" style="font-weight: bold;">
+                                    Cases
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="modal-body">
+
+                                        <div class="form-group">
+                                            <label for="court_created_at" class="col-form-label">Created At:</label>
+                                            <input type="datetime-local" name="court_created_at" class="form-control" id="court_created_at">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_type" class="col-form-label">Court Type:</label>
+                                            <input type="text" name="court_type" class="form-control" id="court_type">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_description" class="col-form-label">Court Description:</label>
+                                            <input type="text" name="court_description" class="form-control" id="court_description">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="i_589_filed" class="col-form-label">I 589 filed:</label>
+                                            <input type="text" name="i_589_filed" class="form-control" id="i_589_filed">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="e_28_filed" class="col-form-label">E28 filed:</label>
+                                            <select class="form-select" name="e_28_filed" id="e_28_filed">
+                                              <option value="True">True</option>
+                                              <option value="False">False</option>
+                                            </select>
+
+                                        </div>
+
+
+                                        <!--<div class="form-group">-->
+                                        <!--    <label for="erop" class="col-form-label">Erop:</label>-->
+                                        <!--    <input type="text" name="erop" class="form-control" id="erop">-->
+                                        <!--</div>-->
+                                        <!--<div class="form-group">-->
+                                        <!--    <label for="e_28_filed" class="col-form-label">E28 filed:</label>-->
+                                        <!--    <input type="text" name="e_28_filed" class="form-control" id="e_28_filed">-->
+                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label for="biometrics_filed" class="col-form-label">Biometrics filed:</label>
+                                            <input type="text" name="biometrics_filed" class="form-control" id="biometrics_filed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="foia_submitted" class="col-form-label">Foia submitted:</label>
+                                            <input type="text" name="foia_submitted" class="form-control" id="foia_submitted">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="foia_uploaded" class="col-form-label">Foia uploaded:</label>
+                                            <input type="text" name="foia_uploaded" class="form-control" id="foia_uploaded">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="work_permit_applied" class="col-form-label">Work permit applied:</label>
+                                            <input type="text" name="work_permit_applied" class="form-control" id="work_permit_applied">
+                                        </div>
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="i_589_filed">I 589 filed:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="i_589_filed" name="i_589_filed" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="e_28_filed">E28 filed:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="e_28_filed" name="e_28_filed" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="biometrics_filed">Biometrics filed:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="biometrics_filed" name="biometrics_filed" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="foia_submitted">Foia submitted:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="foia_submitted" name="foia_submitted" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="foia_uploaded">Foia uploaded:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="foia_uploaded" name="foia_uploaded" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="work_permit_applied">Work permit applied:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="work_permit_applied" name="work_permit_applied" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label for="hearing_date" class="col-form-label">Hearing Date:</label>
+                                            <input type="datetime-local" name="hearing_date" class="form-control" id="hearing_date">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hearing_location" class="col-form-label">Hearing Location:</label>
+                                            <input type="text" name="hearing_location" class="form-control" id="hearing_location">
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="ref_no" class="col-form-label">Reference Number:</label>
+                                            <input type="text" name="ref_no" class="form-control" id="ref_no">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="respondent_name" class="col-form-label">Respondent Name:</label>
+                                            <input type="text" name="respondent_name" class="form-control" id="respondent_name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="respondent_advocate" class="col-form-label">Respondent Advocate:</label>
+                                            <input type="text" name="respondent_advocate" class="form-control" id="respondent_advocate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="case_type" class="col-form-label">Case Type:</label>
+                                            <input type="text" name="case_type" class="form-control" id="case_type">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="case_description" class="col-form-label">Case Description:</label>
+                                            <input type="text" name="case_description" class="form-control" id="case_description">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sense_of_urgent" class="col-form-label">Sense of Urgent:</label>
+                                            <input type="text" name="sense_of_urgent" class="form-control" id="sense_of_urgent">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_no" class="col-form-label">Court Number:</label>
+                                            <input type="text" name="court_no" class="form-control" id="court_no">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_type" class="col-form-label">Court Type:</label>
+                                            <input type="text" name="court_type" class="form-control" id="court_type">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="judge_name" class="col-form-label">Judge Name:</label>
+                                            <input type="text" name="judge_name" class="form-control" id="judge_name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_remark" class="col-form-label">Court Remark:</label>
+                                            <input type="text" name="court_remark" class="form-control" id="court_remark">
+                                        </div>
+                                    </div>
+                                    <button id="nextButton5" type="button" class="btn btn-primary" style="float: right; margin-right: 50px;
+                                                margin-bottom: 20px;">Next</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Document Details -->
+                        <div class="card">
+                            <div class="card-header" id="headingSeven">
+                                <h5 class="mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven" onclick="event.preventDefault();" style="font-weight: bold;">
+                                    Documents
+                                </button>
+                                </h5>
+                            </div>
+
+                            <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="attachment" class="col-form-label">Attachment:</label>
+                                            <input type="file" name="attachment" id="id_attachment">
+                                            <button type="button" id="add_item">add item</button>
+                                            <div id="appended_inputs"></div>
+                                            <script>
+                                                $('#add_item').click(function() {
+                                                      $('#appended_inputs').append('<input type="file" name="attachment" class="new_icon" >');
+                                                      $('.new_icon:last').get(0).files= $('#icon').get(0).files;
+                                                });
+                                            </script>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        </div>
+
+                            <div class="modal-footer">
+                                <button id="modalClose2" type="button" class="btn btn-danger">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade show" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header bg-primary">
+                          <h5 class="modal-title text-white" id="title_event_detail"></h5>
+                          <button id="modalDetailClose" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <!-------------------- Update Form --------------------------->
+                      <form method="">
+                          {% csrf_token %}
+                          <div class="modal-body">
+
+                              <div class="form-group">
+                                  <label for="message-text" class="col-form-label">Description:</label>
+                                  <p id = "description_event_detail">
+                                  </p>
+                              </div>
+                              <div class="form-group">
+                                  <label for="message-text" class="col-form-label">Alien Number:</label>
+                                  <p id = "alien_number_event_detail">
+                              </div>
+                              <div class="form-group">
+                                  <label for="message-text" class="col-form-label">Identity:</label>
+                                  <p id = "client_identity_event_detail">
+                              </div>
+
+
+                              <div class="form-group">
+                                <label for="ref_no">Ref No:</label>
+                                <p id="ref_no_event_detail"></p>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="eevnt_id">Event id:</label>
+                                <p id="event_id_event_detail"></p>
+                            </div>
+
+
+
+                          </div>
+                          <div class="modal-footer">
+                              <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Delete</button>
+                              <button id="client_detail_btn" type="button" class="btn btn-success">Client Details</button>
+                              <button id="edit_case_btn" data-event-id-day="" type="button" class="btn btn-primary">Edit Case</button>
+
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+
+
+        <!-------------------- Client Details Modal ------------------->
+          <div class="modal fade show" id="clientDetailModal" tabindex="-1" role="dialog" aria-labelledby="clientDetailModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="clientDetailModalTitle">Client Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="alien_number" class="col-form-label">Alien Number:</label>
+                                                <input type="text" name="alien_number" class="form-control" id="alien_number_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="full_name" class="col-form-label">Full Name:</label>
+                                                <input type="text" name="full_name" class="form-control" id="full_name_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_identity" class="col-form-label">Identity:</label>
+                                                <input type="text" name="client_identity" class="form-control" id="client_identity_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_gender" class="col-form-label">Gender:</label>
+                                                <input type="text" name="client_gender" class="form-control" id="client_gender_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_phone_number" class="col-form-label">Phone Number:</label>
+                                                <input type="text" name="client_phone_number" class="form-control" id="client_phone_number_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_email" class="col-form-label">Email:</label>
+                                                <input type="text" name="client_email" class="form-control" id="client_email_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_address1" class="col-form-label">Address 1:</label>
+                                                <input type="text" name="client_address1" class="form-control" id="client_address1_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_address2" class="col-form-label">Address 2:</label>
+                                                <input type="text" name="client_address2" class="form-control" id="client_address2_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_city" class="col-form-label">City:</label>
+                                                <input type="text" name="client_city" class="form-control" id="client_city_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_postcode" class="col-form-label">Postcode:</label>
+                                                <input type="text" name="client_postcode" class="form-control" id="client_postcode_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_state" class="col-form-label">State:</label>
+                                                <input type="text" name="client_state" class="form-control" id="client_state_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_country" class="col-form-label">Country:</label>
+                                                <input type="text" name="client_country" class="form-control" id="client_country_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="client_remark" class="col-form-label">Remark:</label>
+                                                <input type="text" name="client_remark" class="form-control" id="client_remark_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_fullname" class="col-form-label">Agent Fullname:</label>
+                                                <input type="text" name="agent_fullname" class="form-control" id="agent_fullname_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_ph" class="col-form-label">Agent Phone:</label>
+                                                <input type="text" name="agent_ph" class="form-control" id="agent_ph_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_identity" class="col-form-label">Agent Identity:</label>
+                                                <input type="text" name="agent_identity" class="form-control" id="agent_identity_ed">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="agent_latitude" class="col-form-label">Latitude:</label>
+                                                <input type="text" name="agent_latitude" class="form-control" id="agent_latitude_ed">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent_longitude" class="col-form-label">longitude:</label>
+                                                <input type="text" name="agent_longitude" class="form-control" id="agent_longitude_ed">
+                                            </div>
+
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="client_role_created_at" class="col-form-label">Created At:</label>-->
+                                            <!--    <input type="datetime-local" name="client_role_created_at" class="form-control" id="client_role_created_at_ed">-->
+                                            <!--</div>-->
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="client_role" class="col-form-label">Client Role:</label>-->
+                                            <!--    <input type="text" name="client_role" class="form-control" id="client_role_ed">-->
+                                            <!--</div>-->
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="client_role_description" class="col-form-label">Client Role Description:</label>-->
+                                            <!--    <input type="text" name="client_role_description" class="form-control" id="client_role_description_ed">-->
+                                            <!--</div>-->
+
+                                        </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button id="edit_case_btn" data-event-id-day="" type="button" class="btn btn-primary">Edit Case</button>
+                            <button id="update_client_detail_btn" type="button" class="btn btn-success">Update Client Details</button>
+                            <button id="modalClose4" type="button" class="btn btn-danger">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-------------------------- Edit Case ---------------------->
+
+            <div class="modal fade show" id="caseModal" tabindex="-1" role="dialog" aria-labelledby="caseModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="caseModalTitle">Case Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                            <div class="modal-body">
+
+                                        <!--<div class="form-group">-->
+                                        <!--    <label for="court_created_at" class="col-form-label">Created At:</label>-->
+                                        <!--    <input type="datetime-local" name="court_created_at" class="form-control" id="court_created_at_ed">-->
+                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label for="court_type" class="col-form-label">Court Type:</label>
+                                            <input type="text" name="court_type" class="form-control" id="court_type_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_description" class="col-form-label">Court Description:</label>
+                                            <input type="text" name="court_description" class="form-control" id="court_description_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="i_589_filed" class="col-form-label">I 589 filed:</label>
+                                            <input type="text" name="i_589_filed" class="form-control" id="i_589_filed_ed">
+                                        </div>
+
+
+                                        <!--<div class="form-group">-->
+                                        <!--    <label for="erop" class="col-form-label">Erop:</label>-->
+                                        <!--    <input type="text" name="erop" class="form-control" id="erop_ed">-->
+                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label for="e_28_filed" class="col-form-label">E28 filed:</label>
+                                            <input type="text" name="e_28_filed" class="form-control" id="e_28_filed_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="biometrics_filed" class="col-form-label">Biometrics filed:</label>
+                                            <input type="text" name="biometrics_filed" class="form-control" id="biometrics_filed_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="foia_submitted" class="col-form-label">Foia submitted:</label>
+                                            <input type="text" name="foia_submitted" class="form-control" id="foia_submitted_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="foia_uploaded" class="col-form-label">Foia uploaded:</label>
+                                            <input type="text" name="foia_uploaded" class="form-control" id="foia_uploaded_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="work_permit_applied" class="col-form-label">Work permit applied:</label>
+                                            <input type="text" name="work_permit_applied" class="form-control" id="work_permit_applied_ed">
+                                        </div>
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="i_589_filed">I 589 filed:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="i_589_filed" name="i_589_filed" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="e_28_filed">E28 filed:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="e_28_filed" name="e_28_filed" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="biometrics_filed">Biometrics filed:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="biometrics_filed" name="biometrics_filed" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="foia_submitted">Foia submitted:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="foia_submitted" name="foia_submitted" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="foia_uploaded">Foia uploaded:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="foia_uploaded" name="foia_uploaded" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-check">-->
+                                        <!--  <label class="form-check-label" for="work_permit_applied">Work permit applied:</label>-->
+                                        <!--  <input type="checkbox" class="form-check-input" id="work_permit_applied" name="work_permit_applied" style="margin-left:10px">-->
+
+                                        <!--</div>-->
+
+                                        <!--<div class="form-group">-->
+                                        <!--    <label for="hearing_date" class="col-form-label">Hearing Date:</label>-->
+                                        <!--    <input type="datetime-local" name="hearing_date" class="form-control" id="hearing_date_ed">-->
+                                        <!--</div>-->
+                                        <div class="form-group">
+                                            <label for="hearing_location" class="col-form-label">Hearing Location:</label>
+                                            <input type="text" name="hearing_location" class="form-control" id="hearing_location_ed">
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="ref_no" class="col-form-label">Reference Number:</label>
+                                            <input type="text" name="ref_no" class="form-control" id="ref_no_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="respondent_name" class="col-form-label">Respondent Name:</label>
+                                            <input type="text" name="respondent_name" class="form-control" id="respondent_name_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="respondent_advocate" class="col-form-label">Respondent Advocate:</label>
+                                            <input type="text" name="respondent_advocate" class="form-control" id="respondent_advocate_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="case_type" class="col-form-label">Case Type:</label>
+                                            <input type="text" name="case_type" class="form-control" id="case_type_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="case_description" class="col-form-label">Case Description:</label>
+                                            <input type="text" name="case_description" class="form-control" id="case_description_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sense_of_urgent" class="col-form-label">Sense of Urgent:</label>
+                                            <input type="text" name="sense_of_urgent" class="form-control" id="sense_of_urgent_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_no" class="col-form-label">Court Number:</label>
+                                            <input type="text" name="court_no" class="form-control" id="court_no_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_type" class="col-form-label">Court Type:</label>
+                                            <input type="text" name="court_type" class="form-control" id="court_type_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="judge_name" class="col-form-label">Judge Name:</label>
+                                            <input type="text" name="judge_name" class="form-control" id="judge_name_ed">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="court_remark" class="col-form-label">Court Remark:</label>
+                                            <input type="text" name="court_remark" class="form-control" id="court_remark_ed">
+                                        </div>
+
+                                        </div>
+
+                        <div class="modal-footer">
+                            <button id="update_case_btn" type="button" class="btn btn-success">Update Case</button>
+                            <button id="modalClose5" type="button" class="btn btn-danger">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block extrascripts %}
+<script src="{% static 'calender/main.js' %}"></script>
+<script>
+
+    $('#nextButton').click(function() {
+        $('#collapseOne').collapse('hide');
+        $('#collapseTwo').collapse('show');
+    });
+
+    $('#nextButton2').click(function() {
+        $('#collapseTwo').collapse('hide');
+        $('#collapseFive').collapse('show');
+    });
+
+    $('#nextButton5').click(function() {
+        $('#collapseFive').collapse('hide');
+        $('#collapseSeven').collapse('show');
+    });
+
+
+
+  function converterDataParaDjangoFormat(data) {
+      const dataJS = new Date(data);
+      const ano = dataJS.getFullYear();
+      const mes = (dataJS.getMonth() + 1).toString().padStart(2, '0');
+      const dia = dataJS.getDate().toString().padStart(2, '0');
+      const hora = dataJS.getHours().toString().padStart(2, '0');
+      const minuto = dataJS.getMinutes().toString().padStart(2, '0');
+      const segundo = dataJS.getSeconds().toString().padStart(2, '0');
+      const formatoDjango = `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
+      return formatoDjango;
+  }
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var today = new Date();
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
+        },
+        initialDate: today,
+        navLinks: true, // can click day/week names to navigate views
+        selectable: true,
+        selectMirror: true,
+        select: function(arg) {
+          console.log('clicked')
+          console.log(arg.start)
+          console.log(arg.end)
+          var modal = document.getElementById('eventModal')
+          modal.style.display = 'block'
+          document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
+          document.getElementById('id_end_time').value = converterDataParaDjangoFormat(arg.end);
+          calendar.unselect()
+        },
+
+
+        eventClick: function(arg) {
+
+          var title = arg.event.title;
+        //   var caseDetails = arg.event.extendedProps.case;
+
+          var eventId = arg.event.id;
+
+          var modal = document.getElementById('detailModal')
+
+
+          var modalDescripition = document.getElementById('description_event_detail')
+          var modalIdentity = document.getElementById('client_identity_event_detail')
+          var modalAlien = document.getElementById('alien_number_event_detail')
+          var modalRef = document.getElementById('ref_no_event_detail')
+          var modaleveid = document.getElementById('event_id_event_detail')
+
+         $.ajax({
+            url: 'get_event_details/' + eventId + '/',
+            type: 'GET',
+            success: function(response) {
+                // alert(response.alien_number)
+
+
+                  modalDescripition.textContent = response.description
+                  modalAlien.textContent = response.alien_number
+                  modalIdentity.textContent = response.identity
+                  modalRef.textContent = response.ref_no
+                  modaleveid.textContent = response.event_id
+
+
+
+                  modal.style.display = 'block';
+
+
+            },
+            error: function(xhr, status, error) {
+
+            }
+                });
+
+        //   var modalInputEnd = document.getElementById('end_event_detail');
+
+        //   var modal = document.getElementById('detailModal')
+        //   var modalTitle = document.getElementById('title_event_detail');
+        //   var modalAlien = document.getElementById('alien_number_event_detail');
+        //   var modalIdentity = document.getElementById('client_identity_event_detail');
+
+        //     // var modalRefNo = document.getElementById('ref_no_event_detail');
+        //     // var modalRespondentName = document.getElementById('respondent_name_event_detail');
+        //     // var modalCaseType = document.getElementById('case_type_event_detail');
+
+        //     // modalTitle.textContent = title;
+        //     // modalRefNo.textContent = caseDetails.ref_no;
+        //     // modalRespondentName.textContent = caseDetails.respondent_name;
+        //     // modalCaseType.textContent = caseDetails.case_type;
+
+
+        //   var deleteButton = document.getElementById("delete-event-button");
+
+
+        //   deleteButton.setAttribute("data-event-id", id);
+
+        //   modal.style.display = 'block'
+
+        //   modalTitle.textContent = title;
+        // //   modalAlien.textContent = start;
+        // //   modalIdentity.textContent = end;
+
+
+        //   modal.style.display = 'block';
+
+        },
+        editable: true,
+        dayMaxEvents: true, // allow "more" link when too many events
+        events: {{events|safe}},
+
+      });
+
+
+      calendar.render();
+    });
+    const closeBtn1 = document.getElementById('modalClose1');
+    const closeBtn2 = document.getElementById('modalClose2');
+    const closeBtn3 = document.getElementById('modalDetailClose');
+    const closeBtn4 = document.getElementById('modalClose4');
+    const closeBtn5 = document.getElementById('modalClose5');
+    closeBtn1.addEventListener('click',()=>{
+      const eventModal = document.getElementById('eventModal')
+      eventModal.style.display = 'none';
+    });
+    closeBtn2.addEventListener('click',()=>{
+      const eventModal = document.getElementById('eventModal')
+      eventModal.style.display = 'none';
+    });
+    closeBtn3.addEventListener('click',()=>{
+      const eventModal = document.getElementById('detailModal')
+      eventModal.style.display = 'none';
+    });
+    closeBtn4.addEventListener('click',()=>{
+      const eventModal = document.getElementById('clientDetailModal')
+      eventModal.style.display = 'none';
+    });
+    closeBtn5.addEventListener('click',()=>{
+      const eventModal = document.getElementById('caseModal')
+      eventModal.style.display = 'none';
+    });
+    function formatDateTime(dateTime) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+      const dataFormatada = new Date(dateTime).toLocaleDateString('pt-BR', options);
+      return dataFormatada;
+    };
+    document.getElementById('delete-event-button').addEventListener('click', function() {
+      const eventId = this.getAttribute('data-event-id');
+
+      if (confirm('Are you sure you want to delete this event?')) {
+          $.ajax({
+
+              url: 'delete_event/' + eventId + '/',
+              type: 'POST',
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+              },
+              success: function(response) {
+                  alert(response.message);
+                  window.location.reload();
+              },
+              error: function(xhr, status, error) {
+                  alert('Error!');
+              }
+
+          });
+      }});
+
+
+      function fetchClientRecordDetails(arg) {
+            var eventId = arg
+            $.ajax({
+                url: 'get_client_record_details/' + eventId + '/',
+                type: 'GET',
+                success: function(response) {
+                    console.log('response====',response)
+                    document.getElementById('alien_number_ed').value = response.alien_number;
+                    document.getElementById('full_name_ed').value = response.full_name;
+                    document.getElementById('client_identity_ed').value = response.identity;
+                    document.getElementById('client_gender_ed').value = response.gender;
+                    document.getElementById('client_phone_number_ed').value = response.phone_number;
+                    document.getElementById('client_email_ed').value = response.email;
+                    document.getElementById('client_address1_ed').value = response.address1;
+                    document.getElementById('client_address2_ed').value = response.address2;
+                    document.getElementById('client_city_ed').value = response.city;
+                    document.getElementById('client_postcode_ed').value = response.postcode;
+                    document.getElementById('client_state_ed').value = response.state;
+                    document.getElementById('client_country_ed').value = response.country;
+                    document.getElementById('client_remark_ed').value = response.remark;
+                    document.getElementById('agent_fullname_ed').value = response.agent_fullname;
+                    document.getElementById('agent_ph_ed').value = response.agent_ph;
+                    document.getElementById('agent_identity_ed').value = response.agent_identity;
+                    document.getElementById('agent_latitude_ed').value = response.agent_latitude;
+                    document.getElementById('agent_longitude_ed').value = response.agent_longitude;
+                    // document.getElementById('client_role_created_at_ed').value = response.client_role_created_at;
+                    // document.getElementById('client_role_ed').value = response.client_role;
+                    // document.getElementById('client_role_description_ed').value = response.client_role_description;
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching client record details:', error);
+                }
+            });
+        }
+
+
+
+     function fetchCaseDetails(arg) {
+            var eventId = 49
+            $.ajax({
+                url: 'get_case_details/' + eventId + '/',
+                type: 'GET',
+                success: function(response) {
+                    console.log('response 12====',response)
+                    // $('#court_created_at_ed').val(response.court_created_at);
+                    $('#court_type_ed').val(response.court_type);
+                    $('#court_description_ed').val(response.court_description);
+                    $('#i_589_filed_ed').val(response.i_589_filed);
+                    $('#e_28_filed_ed').val(response.e_28_filed);
+                    $('#biometrics_filed_ed').val(response.biometrics_filed);
+                    $('#foia_submitted_ed').val(response.foia_submitted);
+                    $('#foia_uploaded_ed').val(response.foia_uploaded);
+                    $('#work_permit_applied_ed').val(response.work_permit_applied);
+                    // $('#hearing_date_ed').val(response.hearing_date);
+                    $('#hearing_location_ed').val(response.hearing_location);
+                    $('#ref_no_ed').val(response.ref_no);
+                    $('#respondent_name_ed').val(response.respondent_name);
+                    $('#respondent_advocate_ed').val(response.respondent_advocate);
+                    $('#case_type_ed').val(response.case_type);
+                    $('#case_description_ed').val(response.case_description);
+                    $('#sense_of_urgent_ed').val(response.sense_of_urgent);
+                    $('#court_no_ed').val(response.court_no);
+                    $('#judge_name_ed').val(response.judge_name);
+                    $('#court_remark_ed').val(response.court_remark);
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching client record details:', error);
+                }
+            });
+        }
+
+
+
+
+      document.getElementById('client_detail_btn').addEventListener('click', function() {
+            var detailModal = document.getElementById('detailModal');
+            var clientDetailModal = document.getElementById('clientDetailModal');
+
+
+            detailModal.style.display = 'none';
+
+            clientDetailModal.style.display = 'block';
+            var event_id = document.getElementById('event_id_event_detail').textContent
+            // alert(event_id)
+            fetchClientRecordDetails(arg=event_id);
+        });
+
+
+        document.getElementById('edit_case_btn').addEventListener('click', function() {
+            var detailModal = document.getElementById('detailModal');
+            var clientDetailModal = document.getElementById('caseModal');
+
+            // Close the current detail modal
+            detailModal.style.display = 'none';
+
+            // Open the client detail modal
+            caseModal.style.display = 'block';
+                fetchCaseDetails();
+            // fetchClientRecordDetails();
+        });
+
+
+        document.getElementById('update_client_detail_btn').addEventListener('click', function() {
+            var eventId = 49
+            var updatedData = {
+                // Get updated values from the input fields
+                alien_number: document.getElementById('alien_number_ed').value,
+                full_name: document.getElementById('full_name_ed').value,
+                identity: document.getElementById('client_identity_ed').value,
+                gender: document.getElementById('client_gender_ed').value,
+                phone_number: document.getElementById('client_phone_number_ed').value,
+                email: document.getElementById('client_email_ed').value,
+                address1: document.getElementById('client_address1_ed').value,
+                address2: document.getElementById('client_address2_ed').value,
+                city: document.getElementById('client_city_ed').value,
+                postcode: document.getElementById('client_postcode_ed').value,
+                state: document.getElementById('client_state_ed').value,
+                country: document.getElementById('client_country_ed').value,
+                remark: document.getElementById('client_remark_ed').value,
+                agent_fullname: document.getElementById('agent_fullname_ed').value,
+                agent_ph: document.getElementById('agent_ph_ed').value,
+                agent_identity: document.getElementById('agent_identity_ed').value,
+                agent_latitude: document.getElementById('agent_latitude_ed').value,
+                agent_longitude: document.getElementById('agent_longitude_ed').value,
+                // client_role_created_at: document.getElementById('client_role_created_at_ed').value,
+                // client_role: document.getElementById('client_role_ed').value,
+                // client_role_description: document.getElementById('client_role_description_ed').value,
+                // ref_no: document.getElementById('ref_no_event_detail').value,
+            };
+
+            $.ajax({
+                url: 'update_client_record/' + eventId + '/',
+                type: 'POST',
+                data: updatedData,
+                success: function(response) {
+                    // Handle success response
+                    console.log('Update successful:', response);
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error('Error updating client record:', error);
+                }
+            });
+        });
+
+
+        function updateCaseDetails(eventId) {
+        var data = {
+            // court_created_at: $('#court_created_at_ed').val(),
+            court_type: $('#court_type_ed').val(),
+            court_description: $('#court_description_ed').val(),
+            i_589_filed: $('#i_589_filed_ed').val(),
+            e_28_filed: $('#e_28_filed_ed').val(),
+            biometrics_filed: $('#biometrics_filed_ed').val(),
+            foia_submitted: $('#foia_submitted_ed').val(),
+            foia_uploaded: $('#foia_uploaded_ed').val(),
+            work_permit_applied: $('#work_permit_applied_ed').val(),
+            // hearing_date: $('#hearing_date_ed').val(),
+            hearing_location: $('#hearing_location_ed').val(),
+            ref_no: $('#ref_no_ed').val(),
+            respondent_name: $('#respondent_name_ed').val(),
+            respondent_advocate: $('#respondent_advocate_ed').val(),
+            case_type: $('#case_type_ed').val(),
+            case_description: $('#case_description_ed').val(),
+            sense_of_urgent: $('#sense_of_urgent_ed').val(),
+            judge_name: $('#judge_name_ed').val(),
+            court_remark: $('#court_remark_ed').val()
+        };
+
+        console.log("data=====",data)
+
+        $.ajax({
+            url: 'update_case_details/' + eventId + '/',
+            type: 'POST',
+            data: data,
+            success: function(response) {
+                console.log('response====', response);
+                alert('Case details updated successfully');
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error updating case details:', error);
+                alert('Failed to update case details');
+            }
+        });
+    }
+
+    document.getElementById('update_case_btn').addEventListener('click', function() {
+        // Assuming the eventId is available globally or can be derived in some way
+        var eventId = 49;
+        updateCaseDetails(eventId);
+    });
+
+
+
+      document.getElementById('add-to-next-week').addEventListener('click', function() {
+          const eventId = this.getAttribute('data-event-id-week');
+          if (confirm('Are you sure you want add this event to next week?')) {
+              $.ajax({
+                url: `/next_week/${eventId}/`,
+                  type: 'POST',
+                  data: {
+                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                  },
+                  success: function(response) {
+                      alert(response.message);
+                      window.location.reload();
+                  },
+                  error: function(xhr, status, error) {
+                      alert('Error!');
+                  }
+              });
+          }
+  });
+
+  document.getElementById('add-to-next-day').addEventListener('click', function() {
+    const eventId = this.getAttribute('data-event-id-day');
+    if (confirm('Are you sure you want add this event to next day?')) {
+        $.ajax({
+          url: `/next_day/${eventId}/`,
+            type: 'POST',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(response) {
+                alert(response.message);
+                window.location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('Error!');
+            }
+        });
+    }
+});
+
+</script>
+{% endblock extrascripts %}
+
