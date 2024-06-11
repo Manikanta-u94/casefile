@@ -13,7 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
 from calendarapp.models import EventMember, Event
-from myadmin.models import ClientRecord, ClientRole, CourtType, Case, Invoice, CaseAttachment
+from myadmin.models import ClientRecord, ClientRole, CourtType, Case, Invoice, CaseAttachment, Payments
 from myadmin.forms import AddClientForm, AddClientRole, AddCourtType, CaseForm
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
@@ -283,16 +283,28 @@ def CalendarViewNew(request):
                         sense_of_urgent = sense_of_urgent,
                         court_type = court_type_obj,
                         judge_name = judge_name,
-                        court_remark = court_remark)
+                        court_remark = court_remark,
+                        event=event_obj)
         case_obj.save()
 
         # Handling attachments
 
         for file_att in request.FILES.getlist('attachment'):
-            print("attachment_file12======",file_att)
 
             case_attachment = CaseAttachment(upload=file_att, case_att_id=case_obj)
             case_attachment.save()
+
+        # Payments
+        total_amount =  request.POST.get("total_amount")
+        paying_amount =  request.POST.get("paying_amount")
+
+        payments_obj = Payments(total_amount=total_amount,
+                                paying_amount=paying_amount,
+                                case_id=case_obj,
+                                event=event_obj
+            )
+
+        payments_obj.save()
 
     all_events = Event.objects.all()
     out = []
@@ -307,19 +319,9 @@ def CalendarViewNew(request):
                     "description": event.description,
 
         })
-    '''
-    Description:
-    Alien Number:
-    Identity:
-    Ref No:
-    Respondent Name:
-    '''
+
     context["events"] = out
-    # context["Description"] =
-    # context["Alien Number"] =
-    # context["Identity"] =
-    # context["Ref No"] =
-    # context["Respondent Name"] =
+
 
 
     return render(request, 'calendarapp/calendar.html', context)
@@ -376,6 +378,7 @@ def get_client_record_details(request, event_id):
             'agent_identity': client_ob.agent_identity,
             'agent_latitude': client_ob.latitude,
             'agent_longitude': client_ob.longitude,
+            'event_id':event.id
             # 'client_role_created_at': client_ob.created_at,
             # 'client_role': client_ob.client_role,
             # 'client_role_description': client_ob.client_role_description,
@@ -414,6 +417,25 @@ def get_case_details(request, event_id):
             "court_no": case_ob.court_no,
             "judge_name": case_ob.judge_name,
             "court_remark": case_ob.court_remark,
+            'event_id':event.id
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_payment_details(request, event_id):
+    try:
+        event = Event.objects.get(pk=event_id)
+        client_ob = ClientRecord.objects.get(event__id=event.id)
+        court_type_ob = CourtType.objects.get(event__id=event.id)
+        case_ob = Case.objects.get(clients__id=client_ob.id)
+        payment_ob = Payments.objects.get(event__id=event.id)
+        data = {
+            'total_amount':payment_ob.total_amount,
+            'paying_amount':payment_ob.paying_amount,
+
+            'event_id':event.id
         }
         return JsonResponse(data)
     except Exception as e:
@@ -503,6 +525,29 @@ def update_case_details(request, event_id):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+
+@csrf_exempt
+def update_payment_details(request, event_id):
+    if request.method == 'POST':
+        try:
+            event = Event.objects.get(pk=event_id)
+            payment_ob = Payments.objects.get(event__id=event.id)
+
+
+            # Update payment record with new data
+            # payment_ob.total_amount = request.POST.get('total_amount')
+            payment_ob.paying_amount = request.POST.get('paying_amount')
+
+            payment_ob.save()
+
+
+            return JsonResponse({'message': 'payment record updated successfully'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 

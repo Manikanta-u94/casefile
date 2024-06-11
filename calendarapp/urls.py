@@ -21,6 +21,10 @@ urlpatterns = [
     path('get_case_details/<int:event_id>/', views.get_case_details, name='get_case_details'),
     path('update_case_details/<int:event_id>/', views.update_case_details, name='update_case_details'),
 
+
+    path('get_payment_details/<int:event_id>/', views.get_payment_details, name='get_payment_details'),
+    path('update_payment_details/<int:event_id>/', views.update_payment_details, name='update_payment_details'),
+
     path('delete_event/<int:event_id>/', views.delete_event, name='delete_event'),
     path('next_week/<int:event_id>/', views.next_week, name='next_week'),
     path('next_day/<int:event_id>/', views.next_day, name='next_day'),

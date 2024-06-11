@@ -23,11 +23,12 @@
         <style>
         .modal-dialog{
             overflow-y: initial !important;
-            margin-top: 60px;
+            margin-top: -10px;
         }
-        .modal-body{
+        .modal-body-1, .modal-body-2{
             height: 60vh;
             overflow-y: auto;
+            padding:20px;
         }
         hr{
             color: #fff;
@@ -85,19 +86,19 @@
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="recipient-name" class="col-form-label">Event Title:</label>
-                                                <input type="text" name="title" maxlength="200" required="" id="id_title">
+                                                <input type="text" name="title" class="form-control" maxlength="200" required="" id="id_title">
                                             </div>
                                             <div class="form-group">
                                                 <label for="message-text" class="col-form-label">Description:</label>
-                                                <textarea name="description" cols="40" rows="10" required="" id="id_description"></textarea>
+                                                <textarea name="description" cols="40" rows="3" class="form-control" required="" id="id_description"></textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="message-text" class="col-form-label">Start Date:</label>
-                                                <input type="datetime-local" name="start_time" required="" id="id_start_time">
+                                                <input type="datetime-local" name="start_time" class="form-control" required="" id="id_start_time">
                                             </div>
                                             <div class="form-group">
                                                 <label for="message-text" class="col-form-label">End Date:</label>
-                                                <input type="datetime-local" name="end_time" required="" id="id_end_time">
+                                                <input type="datetime-local" name="end_time" class="form-control" required="" id="id_end_time">
                                             </div>
                                         </div>
 
@@ -119,7 +120,7 @@
 
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                                     <div class="card-body">
-                                        <div class="modal-body">
+                                        <div class="modal-body-1">
                                             <div class="form-group">
                                                 <label for="alien_number" class="col-form-label">Alien Number:</label>
                                                 <input type="text" name="alien_number" class="form-control" id="alien_number">
@@ -215,194 +216,240 @@
 
                             </div>
 
-                        <!-- Case Details -->
-                        <div class="card">
-                            <div class="card-header" id="headingFive">
+                            <!-- Case Details -->
+                            <div class="card">
+                                <div class="card-header" id="headingFive">
+                                    <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive" onclick="event.preventDefault();" style="font-weight: bold;">
+                                        Cases
+                                    </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="modal-body-2">
+
+                                            <div class="form-group">
+                                                <label for="court_created_at" class="col-form-label">Created At:</label>
+                                                <input type="datetime-local" name="court_created_at" class="form-control" id="court_created_at">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="court_type" class="col-form-label">Court Type:</label>
+                                                <input type="text" name="court_type" class="form-control" id="court_type">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="court_description" class="col-form-label">Court Description:</label>
+                                                <input type="text" name="court_description" class="form-control" id="court_description">
+                                            </div>
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="i_589_filed" class="col-form-label">I 589 filed:</label>-->
+                                            <!--    <input type="text" name="i_589_filed" class="form-control" id="i_589_filed">-->
+                                            <!--</div>-->
+
+                                            <div class="form-group">
+                                                <label for="i_589_filed" class="col-form-label">I 589 filed:</label>
+                                                <select class="form-select" name="i_589_filed" id="i_589_filed">
+                                                    <option>--------</option>
+                                                  <option value="True">True</option>
+                                                  <option value="False">False</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="e_28_filed" class="col-form-label">E28 filed:</label>
+                                                <select class="form-select" name="e_28_filed" id="e_28_filed">
+                                                    <option>--------</option>
+                                                  <option value="True">True</option>
+                                                  <option value="False">False</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="biometrics_filed" class="col-form-label">Biometrics filed:</label>
+                                                <select class="form-select" name="biometrics_filed" id="biometrics_filed">
+                                                    <option>--------</option>
+                                                  <option value="True">True</option>
+                                                  <option value="False">False</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="foia_submitted" class="col-form-label">Foia submitted:</label>
+                                                <select class="form-select" name="foia_submitted" id="foia_submitted">
+                                                    <option>--------</option>
+                                                  <option value="True">True</option>
+                                                  <option value="False">False</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="foia_uploaded" class="col-form-label">Foia uploaded:</label>
+                                                <select class="form-select" name="foia_uploaded" id="foia_uploaded">
+                                                    <option>--------</option>
+                                                  <option value="True">True</option>
+                                                  <option value="False">False</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="work_permit_applied" class="col-form-label">Work permit applied:</label>
+                                                <select class="form-select" name="work_permit_applied" id="work_permit_applied">
+                                                    <option>--------</option>
+                                                  <option value="True">True</option>
+                                                  <option value="False">False</option>
+                                                </select>
+                                            </div>
+
+
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="erop" class="col-form-label">Erop:</label>-->
+                                            <!--    <input type="text" name="erop" class="form-control" id="erop">-->
+                                            <!--</div>-->
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="e_28_filed" class="col-form-label">E28 filed:</label>-->
+                                            <!--    <input type="text" name="e_28_filed" class="form-control" id="e_28_filed">-->
+                                            <!--</div>-->
+
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="biometrics_filed" class="col-form-label">Biometrics filed:</label>-->
+                                            <!--    <input type="text" name="biometrics_filed" class="form-control" id="biometrics_filed">-->
+                                            <!--</div>-->
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="foia_submitted" class="col-form-label">Foia submitted:</label>-->
+                                            <!--    <input type="text" name="foia_submitted" class="form-control" id="foia_submitted">-->
+                                            <!--</div>-->
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="foia_uploaded" class="col-form-label">Foia uploaded:</label>-->
+                                            <!--    <input type="text" name="foia_uploaded" class="form-control" id="foia_uploaded">-->
+                                            <!--</div>-->
+                                            <!--<div class="form-group">-->
+                                            <!--    <label for="work_permit_applied" class="col-form-label">Work permit applied:</label>-->
+                                            <!--    <input type="text" name="work_permit_applied" class="form-control" id="work_permit_applied">-->
+                                            <!--</div>-->
+
+
+                                            <div class="form-group">
+                                                <label for="hearing_date" class="col-form-label">Hearing Date:</label>
+                                                <input type="datetime-local" name="hearing_date" class="form-control" id="hearing_date">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="hearing_location" class="col-form-label">Hearing Location:</label>
+                                                <input type="text" name="hearing_location" class="form-control" id="hearing_location">
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label for="ref_no" class="col-form-label">Reference Number:</label>
+                                                <input type="text" name="ref_no" class="form-control" id="ref_no">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="respondent_name" class="col-form-label">Respondent Name:</label>
+                                                <input type="text" name="respondent_name" class="form-control" id="respondent_name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="respondent_advocate" class="col-form-label">Respondent Advocate:</label>
+                                                <input type="text" name="respondent_advocate" class="form-control" id="respondent_advocate">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="case_type" class="col-form-label">Case Type:</label>
+                                                <input type="text" name="case_type" class="form-control" id="case_type">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="case_description" class="col-form-label">Case Description:</label>
+                                                <input type="text" name="case_description" class="form-control" id="case_description">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="sense_of_urgent" class="col-form-label">Sense of Urgent:</label>
+                                                <input type="text" name="sense_of_urgent" class="form-control" id="sense_of_urgent">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="court_no" class="col-form-label">Court Number:</label>
+                                                <input type="text" name="court_no" class="form-control" id="court_no">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="court_type" class="col-form-label">Court Type:</label>
+                                                <input type="text" name="court_type" class="form-control" id="court_type">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="judge_name" class="col-form-label">Judge Name:</label>
+                                                <input type="text" name="judge_name" class="form-control" id="judge_name">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="court_remark" class="col-form-label">Court Remark:</label>
+                                                <input type="text" name="court_remark" class="form-control" id="court_remark">
+                                            </div>
+                                        </div>
+                                        <button id="nextButton5" type="button" class="btn btn-primary" style="float: right; margin-right: 50px;
+                                                    margin-bottom: 20px;">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Document Details -->
+                            <div class="card">
+                                <div class="card-header" id="headingSeven">
+                                    <h5 class="mb-0">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven" onclick="event.preventDefault();" style="font-weight: bold;">
+                                        Documents
+                                    </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="attachment" class="col-form-label">Attachment:</label>
+                                                <input type="file" name="attachment" id="id_attachment">
+                                                <button type="button" id="add_item">add item</button>
+                                                <div id="appended_inputs"></div>
+                                                <script>
+                                                    $('#add_item').click(function() {
+                                                          $('#appended_inputs').append('<input type="file" name="attachment" class="new_icon" >');
+                                                          $('.new_icon:last').get(0).files= $('#icon').get(0).files;
+                                                    });
+                                                </script>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-------Payments-------->
+
+                            <div class="card">
+                            <div class="card-header" id="headingEight">
                                 <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive" onclick="event.preventDefault();" style="font-weight: bold;">
-                                    Cases
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight" onclick="event.preventDefault();" style="font-weight: bold;">
+                                    Payments
                                 </button>
                                 </h5>
                             </div>
 
-                            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
-                                <div class="card-body">
-                                    <div class="modal-body">
-
-                                        <div class="form-group">
-                                            <label for="court_created_at" class="col-form-label">Created At:</label>
-                                            <input type="datetime-local" name="court_created_at" class="form-control" id="court_created_at">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="court_type" class="col-form-label">Court Type:</label>
-                                            <input type="text" name="court_type" class="form-control" id="court_type">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="court_description" class="col-form-label">Court Description:</label>
-                                            <input type="text" name="court_description" class="form-control" id="court_description">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="i_589_filed" class="col-form-label">I 589 filed:</label>
-                                            <input type="text" name="i_589_filed" class="form-control" id="i_589_filed">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="e_28_filed" class="col-form-label">E28 filed:</label>
-                                            <select class="form-select" name="e_28_filed" id="e_28_filed">
-                                              <option value="True">True</option>
-                                              <option value="False">False</option>
-                                            </select>
-
-                                        </div>
-
-
-                                        <!--<div class="form-group">-->
-                                        <!--    <label for="erop" class="col-form-label">Erop:</label>-->
-                                        <!--    <input type="text" name="erop" class="form-control" id="erop">-->
-                                        <!--</div>-->
-                                        <!--<div class="form-group">-->
-                                        <!--    <label for="e_28_filed" class="col-form-label">E28 filed:</label>-->
-                                        <!--    <input type="text" name="e_28_filed" class="form-control" id="e_28_filed">-->
-                                        <!--</div>-->
-                                        <div class="form-group">
-                                            <label for="biometrics_filed" class="col-form-label">Biometrics filed:</label>
-                                            <input type="text" name="biometrics_filed" class="form-control" id="biometrics_filed">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="foia_submitted" class="col-form-label">Foia submitted:</label>
-                                            <input type="text" name="foia_submitted" class="form-control" id="foia_submitted">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="foia_uploaded" class="col-form-label">Foia uploaded:</label>
-                                            <input type="text" name="foia_uploaded" class="form-control" id="foia_uploaded">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="work_permit_applied" class="col-form-label">Work permit applied:</label>
-                                            <input type="text" name="work_permit_applied" class="form-control" id="work_permit_applied">
-                                        </div>
-
-                                        <!--<div class="form-check">-->
-                                        <!--  <label class="form-check-label" for="i_589_filed">I 589 filed:</label>-->
-                                        <!--  <input type="checkbox" class="form-check-input" id="i_589_filed" name="i_589_filed" style="margin-left:10px">-->
-
-                                        <!--</div>-->
-
-                                        <!--<div class="form-check">-->
-                                        <!--  <label class="form-check-label" for="e_28_filed">E28 filed:</label>-->
-                                        <!--  <input type="checkbox" class="form-check-input" id="e_28_filed" name="e_28_filed" style="margin-left:10px">-->
-
-                                        <!--</div>-->
-
-                                        <!--<div class="form-check">-->
-                                        <!--  <label class="form-check-label" for="biometrics_filed">Biometrics filed:</label>-->
-                                        <!--  <input type="checkbox" class="form-check-input" id="biometrics_filed" name="biometrics_filed" style="margin-left:10px">-->
-
-                                        <!--</div>-->
-
-                                        <!--<div class="form-check">-->
-                                        <!--  <label class="form-check-label" for="foia_submitted">Foia submitted:</label>-->
-                                        <!--  <input type="checkbox" class="form-check-input" id="foia_submitted" name="foia_submitted" style="margin-left:10px">-->
-
-                                        <!--</div>-->
-
-                                        <!--<div class="form-check">-->
-                                        <!--  <label class="form-check-label" for="foia_uploaded">Foia uploaded:</label>-->
-                                        <!--  <input type="checkbox" class="form-check-input" id="foia_uploaded" name="foia_uploaded" style="margin-left:10px">-->
-
-                                        <!--</div>-->
-
-                                        <!--<div class="form-check">-->
-                                        <!--  <label class="form-check-label" for="work_permit_applied">Work permit applied:</label>-->
-                                        <!--  <input type="checkbox" class="form-check-input" id="work_permit_applied" name="work_permit_applied" style="margin-left:10px">-->
-
-                                        <!--</div>-->
-                                        <div class="form-group">
-                                            <label for="hearing_date" class="col-form-label">Hearing Date:</label>
-                                            <input type="datetime-local" name="hearing_date" class="form-control" id="hearing_date">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="hearing_location" class="col-form-label">Hearing Location:</label>
-                                            <input type="text" name="hearing_location" class="form-control" id="hearing_location">
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label for="ref_no" class="col-form-label">Reference Number:</label>
-                                            <input type="text" name="ref_no" class="form-control" id="ref_no">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="respondent_name" class="col-form-label">Respondent Name:</label>
-                                            <input type="text" name="respondent_name" class="form-control" id="respondent_name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="respondent_advocate" class="col-form-label">Respondent Advocate:</label>
-                                            <input type="text" name="respondent_advocate" class="form-control" id="respondent_advocate">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="case_type" class="col-form-label">Case Type:</label>
-                                            <input type="text" name="case_type" class="form-control" id="case_type">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="case_description" class="col-form-label">Case Description:</label>
-                                            <input type="text" name="case_description" class="form-control" id="case_description">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="sense_of_urgent" class="col-form-label">Sense of Urgent:</label>
-                                            <input type="text" name="sense_of_urgent" class="form-control" id="sense_of_urgent">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="court_no" class="col-form-label">Court Number:</label>
-                                            <input type="text" name="court_no" class="form-control" id="court_no">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="court_type" class="col-form-label">Court Type:</label>
-                                            <input type="text" name="court_type" class="form-control" id="court_type">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="judge_name" class="col-form-label">Judge Name:</label>
-                                            <input type="text" name="judge_name" class="form-control" id="judge_name">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="court_remark" class="col-form-label">Court Remark:</label>
-                                            <input type="text" name="court_remark" class="form-control" id="court_remark">
-                                        </div>
-                                    </div>
-                                    <button id="nextButton5" type="button" class="btn btn-primary" style="float: right; margin-right: 50px;
-                                                margin-bottom: 20px;">Next</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Document Details -->
-                        <div class="card">
-                            <div class="card-header" id="headingSeven">
-                                <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven" onclick="event.preventDefault();" style="font-weight: bold;">
-                                    Documents
-                                </button>
-                                </h5>
-                            </div>
-
-                            <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+                            <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion">
                                 <div class="card-body">
                                     <div class="modal-body">
                                         <div class="form-group">
-                                            <label for="attachment" class="col-form-label">Attachment:</label>
-                                            <input type="file" name="attachment" id="id_attachment">
-                                            <button type="button" id="add_item">add item</button>
-                                            <div id="appended_inputs"></div>
-                                            <script>
-                                                $('#add_item').click(function() {
-                                                      $('#appended_inputs').append('<input type="file" name="attachment" class="new_icon" >');
-                                                      $('.new_icon:last').get(0).files= $('#icon').get(0).files;
-                                                });
-                                            </script>
+                                            <label for="total_amount" class="col-form-label">Total Amount:</label>
+                                            <input type="text" name="total_amount" class="form-control" id="total_amount">
                                         </div>
+                                        <div class="form-group">
+                                            <label for="paying_amount" class="col-form-label">Paying Amount:</label>
+                                            <input type="text" name="paying_amount" class="form-control" id="paying_amount" value="0.00" disabled>
+                                        </div>
+                                        <!--<div class="form-group">-->
+                                        <!--    <label for="remark" class="col-form-label">Remark:</label>-->
+                                        <!--    <textarea name="remark" cols="55" rows="2" required="" id="id_remark"></textarea>-->
+                                        <!--</div>-->
 
                                     </div>
 
                                 </div>
                             </div>
+
                         </div>
 
 
@@ -421,7 +468,7 @@
               <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
                       <div class="modal-header bg-primary">
-                          <h5 class="modal-title text-white" id="title_event_detail"></h5>
+                          <h5 class="modal-title text-white" id="title_event_detail">Update Event Details</h5>
                           <button id="modalDetailClose" type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                           </button>
@@ -461,9 +508,10 @@
 
                           </div>
                           <div class="modal-footer">
-                              <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Delete</button>
-                              <button id="client_detail_btn" type="button" class="btn btn-success">Client Details</button>
+                              <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger" style="margin-right: auto;margin-left: 10px;">Delete</button>
+                              <button id="client_detail_btn" type="button" class="btn btn-success">Edit Client Info.</button>
                               <button id="edit_case_btn" data-event-id-day="" type="button" class="btn btn-primary">Edit Case</button>
+                              <button id="payments_btn" type="button" class="btn btn-info">Edit Payments</button>
 
                           </div>
                       </form>
@@ -476,15 +524,15 @@
           <div class="modal fade show" id="clientDetailModal" tabindex="-1" role="dialog" aria-labelledby="clientDetailModalTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header bg-primary">
                             <h5 class="modal-title" id="clientDetailModalTitle">Client Details</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
 
-                            <div class="modal-body">
+
+                            <div class="modal-body-1">
                                             <div class="form-group">
                                                 <label for="alien_number" class="col-form-label">Alien Number:</label>
                                                 <input type="text" name="alien_number" class="form-control" id="alien_number_ed">
@@ -574,9 +622,10 @@
 
                                         </div>
 
-                        </div>
+
                         <div class="modal-footer">
-                            <button id="edit_case_btn" data-event-id-day="" type="button" class="btn btn-primary">Edit Case</button>
+                            <button id="back1" data-event-id-day="" type="button" class="btn btn-primary" style="margin-right: auto;margin-left: 10px;">back</button>
+                            <!--<button id="edit_case_btn" data-event-id-day="" type="button" class="btn btn-primary">Edit Case</button>-->
                             <button id="update_client_detail_btn" type="button" class="btn btn-success">Update Client Details</button>
                             <button id="modalClose4" type="button" class="btn btn-danger">Close</button>
                         </div>
@@ -590,14 +639,14 @@
             <div class="modal fade show" id="caseModal" tabindex="-1" role="dialog" aria-labelledby="caseModalTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header bg-primary">
                             <h5 class="modal-title" id="caseModalTitle">Case Details</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
 
-                            <div class="modal-body">
+                            <div class="modal-body-1">
 
                                         <!--<div class="form-group">-->
                                         <!--    <label for="court_created_at" class="col-form-label">Created At:</label>-->
@@ -732,12 +781,66 @@
                                         </div>
 
                         <div class="modal-footer">
+                            <button id="back2" data-event-id-day="" type="button" class="btn btn-primary" style="margin-right: auto;margin-left: 10px;">back</button>
                             <button id="update_case_btn" type="button" class="btn btn-success">Update Case</button>
                             <button id="modalClose5" type="button" class="btn btn-danger">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+            <!--------Payments Modal---------->
+            <div class="modal fade show" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <h5 class="modal-title" id="paymentModalTitle">Client Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="total_amount" class="col-form-label">Total Amount:</label>
+                                    <input type="text" name="total_amount" class="form-control" id="total_amount_ed" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paying_amount" class="col-form-label">Paying Amount:</label>
+                                    <input type="text" name="paying_amount" class="form-control" id="paying_amount_ed1" value="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="paying_amount" class="col-form-label" style="display:none">Paying Amount:</label>
+                                    <input type="hidden" name="paying_amount" class="form-control" id="paying_amount_ed">
+                                </div>
+                                <div class="form-group">
+                                    <label for="balance_amount" class="col-form-label">Balance Amount:</label>
+                                    <input type="text" name="balance_amount" class="form-control" id="balance_amount_ed" disabled>
+                                </div>
+                                <!-- <div class="form-group">
+                                    <label for="remark" class="col-form-label">Remark:</label>
+                                   <textarea name="remark" cols="55" rows="2" required="" id="id_remark_ed"></textarea>
+                                </div> -->
+
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button id="back3" data-event-id-day="" type="button" class="btn btn-primary" style="margin-right: auto;margin-left: 10px;">back</button>
+                            <button id="edit_payments_btn" data-event-id-day="" type="button" class="btn btn-primary">Pay</button>
+                            <button id="modalClose6" type="button" class="btn btn-danger">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
 
 
 
@@ -892,6 +995,7 @@
     const closeBtn3 = document.getElementById('modalDetailClose');
     const closeBtn4 = document.getElementById('modalClose4');
     const closeBtn5 = document.getElementById('modalClose5');
+    const closeBtn6 = document.getElementById('modalClose6');
     closeBtn1.addEventListener('click',()=>{
       const eventModal = document.getElementById('eventModal')
       eventModal.style.display = 'none';
@@ -910,6 +1014,10 @@
     });
     closeBtn5.addEventListener('click',()=>{
       const eventModal = document.getElementById('caseModal')
+      eventModal.style.display = 'none';
+    });
+    closeBtn6.addEventListener('click',()=>{
+      const eventModal = document.getElementById('paymentModal')
       eventModal.style.display = 'none';
     });
     function formatDateTime(dateTime) {
@@ -979,7 +1087,7 @@
 
 
      function fetchCaseDetails(arg) {
-            var eventId = 49
+            var eventId = arg
             $.ajax({
                 url: 'get_case_details/' + eventId + '/',
                 type: 'GET',
@@ -1013,6 +1121,25 @@
             });
         }
 
+        function fetchPaymentsDetails(arg) {
+            var eventId = arg
+            $.ajax({
+                url: 'get_payment_details/' + eventId + '/',
+                type: 'GET',
+                success: function(response) {
+                    console.log('response 11====',response)
+                    var balance_amt = response.total_amount - response.paying_amount
+                    $('#total_amount_ed').val(response.total_amount);
+                    $('#paying_amount_ed').val(response.paying_amount);
+                    $('#balance_amount_ed').val(balance_amt);
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching payment details:', error);
+                }
+            });
+        }
+
 
 
 
@@ -1039,13 +1166,74 @@
 
             // Open the client detail modal
             caseModal.style.display = 'block';
-                fetchCaseDetails();
-            // fetchClientRecordDetails();
+            var event_id = document.getElementById('event_id_event_detail').textContent
+                fetchCaseDetails(arg=event_id);
+        });
+
+        document.getElementById('payments_btn').addEventListener('click', function() {
+            var detailModal = document.getElementById('detailModal');
+            var paymentsModal = document.getElementById('paymentModal');
+
+            // Close the current detail modal
+            detailModal.style.display = 'none';
+
+            // Open the client detail modal
+
+            paymentsModal.style.display = 'block';
+            var event_id = document.getElementById('event_id_event_detail').textContent
+            fetchPaymentsDetails(arg=event_id);
+
+        });
+
+
+        document.getElementById('back1').addEventListener('click', function() {
+            var clientDetailModal = document.getElementById('clientDetailModal');
+            var detailModal = document.getElementById('detailModal');
+
+            // Close the current detail modal
+            clientDetailModal.style.display = 'none';
+
+            // Open the client detail modal
+
+            detailModal.style.display = 'block';
+
+
+        });
+
+
+        document.getElementById('back2').addEventListener('click', function() {
+            var caseModal = document.getElementById('caseModal');
+            var detailModal = document.getElementById('detailModal');
+
+            // Close the current detail modal
+            caseModal.style.display = 'none';
+
+            // Open the client detail modal
+
+            detailModal.style.display = 'block';
+
+
+        });
+
+
+
+        document.getElementById('back3').addEventListener('click', function() {
+            var paymentModal = document.getElementById('paymentModal');
+            var detailModal = document.getElementById('detailModal');
+
+            // Close the current detail modal
+            paymentModal.style.display = 'none';
+
+            // Open the client detail modal
+
+            detailModal.style.display = 'block';
+
+
         });
 
 
         document.getElementById('update_client_detail_btn').addEventListener('click', function() {
-            var eventId = 49
+            var eventId = document.getElementById('event_id_event_detail').textContent
             var updatedData = {
                 // Get updated values from the input fields
                 alien_number: document.getElementById('alien_number_ed').value,
@@ -1090,50 +1278,78 @@
 
 
         function updateCaseDetails(eventId) {
-        var data = {
-            // court_created_at: $('#court_created_at_ed').val(),
-            court_type: $('#court_type_ed').val(),
-            court_description: $('#court_description_ed').val(),
-            i_589_filed: $('#i_589_filed_ed').val(),
-            e_28_filed: $('#e_28_filed_ed').val(),
-            biometrics_filed: $('#biometrics_filed_ed').val(),
-            foia_submitted: $('#foia_submitted_ed').val(),
-            foia_uploaded: $('#foia_uploaded_ed').val(),
-            work_permit_applied: $('#work_permit_applied_ed').val(),
-            // hearing_date: $('#hearing_date_ed').val(),
-            hearing_location: $('#hearing_location_ed').val(),
-            ref_no: $('#ref_no_ed').val(),
-            respondent_name: $('#respondent_name_ed').val(),
-            respondent_advocate: $('#respondent_advocate_ed').val(),
-            case_type: $('#case_type_ed').val(),
-            case_description: $('#case_description_ed').val(),
-            sense_of_urgent: $('#sense_of_urgent_ed').val(),
-            judge_name: $('#judge_name_ed').val(),
-            court_remark: $('#court_remark_ed').val()
-        };
+            var data = {
+                // court_created_at: $('#court_created_at_ed').val(),
+                court_type: $('#court_type_ed').val(),
+                court_description: $('#court_description_ed').val(),
+                i_589_filed: $('#i_589_filed_ed').val(),
+                e_28_filed: $('#e_28_filed_ed').val(),
+                biometrics_filed: $('#biometrics_filed_ed').val(),
+                foia_submitted: $('#foia_submitted_ed').val(),
+                foia_uploaded: $('#foia_uploaded_ed').val(),
+                work_permit_applied: $('#work_permit_applied_ed').val(),
+                // hearing_date: $('#hearing_date_ed').val(),
+                hearing_location: $('#hearing_location_ed').val(),
+                ref_no: $('#ref_no_ed').val(),
+                respondent_name: $('#respondent_name_ed').val(),
+                respondent_advocate: $('#respondent_advocate_ed').val(),
+                case_type: $('#case_type_ed').val(),
+                case_description: $('#case_description_ed').val(),
+                sense_of_urgent: $('#sense_of_urgent_ed').val(),
+                judge_name: $('#judge_name_ed').val(),
+                court_remark: $('#court_remark_ed').val()
+            };
 
-        console.log("data=====",data)
+            console.log("data=====",data)
 
-        $.ajax({
-            url: 'update_case_details/' + eventId + '/',
-            type: 'POST',
-            data: data,
-            success: function(response) {
-                console.log('response====', response);
-                alert('Case details updated successfully');
-                window.location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.error('Error updating case details:', error);
-                alert('Failed to update case details');
-            }
-        });
-    }
+            $.ajax({
+                url: 'update_case_details/' + eventId + '/',
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    console.log('response====', response);
+                    alert('Case details updated successfully');
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating case details:', error);
+                    alert('Failed to update case details');
+                }
+            });
+        }
 
     document.getElementById('update_case_btn').addEventListener('click', function() {
         // Assuming the eventId is available globally or can be derived in some way
-        var eventId = 49;
+        var eventId = document.getElementById('event_id_event_detail').textContent;
         updateCaseDetails(eventId);
+    });
+
+
+        function paymentDetails(eventId) {
+            var data = {
+                    // total_amount:$('#total_amount_ed').val(),
+                    paying_amount:$('#paying_amount_ed').val(),
+            };
+
+            $.ajax({
+                url: 'update_payment_details/' + eventId + '/',
+                type: 'POST',
+                data: data,
+                success: function(response) {
+                    alert('Payment details updated successfully');
+                    window.location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error updating case details:', error);
+                    alert('Failed to update case details');
+                }
+            });
+        }
+
+    document.getElementById('edit_payments_btn').addEventListener('click', function() {
+        // Assuming the eventId is available globally or can be derived in some way
+        var eventId = document.getElementById('event_id_event_detail').textContent;
+        paymentDetails(eventId);
     });
 
 

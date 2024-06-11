@@ -49,4 +49,9 @@ class CaseAttachmentAdmin(admin.ModelAdmin):
     model = models.CaseAttachment
 
 
+@admin.register(models.Payments)
+class PaymentsAdmin(admin.ModelAdmin):
+    model = models.Payments
+
+
 

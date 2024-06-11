@@ -138,12 +138,14 @@ class Case(models.Model):
     case_type = models.CharField(max_length=255, choices=CASE_TYPE)
     case_description = models.TextField(blank=True)
     sense_of_urgent = models.CharField(max_length=20)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="case_event", blank=True,null=True)
 
     # Court is Optional
     court_no = models.CharField(max_length=40, blank=True)
     court_type = models.ForeignKey(CourtType, on_delete=models.CASCADE, null=True, blank=True)
     judge_name =  models.CharField(max_length=100, blank=True)
     court_remark = models.TextField(blank=True)
+
 
     #Utility fields
     uniqueId = models.CharField(null=True, blank=True, max_length=100)
@@ -177,6 +179,7 @@ class Payments(models.Model):
     paying_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     balance_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     case_id = models.ForeignKey(Case, on_delete=models.CASCADE, null=True, blank=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="payments_event", blank=True,null=True)
 
     def __str__(self):
         return f"{self.total_amount}"
@@ -195,6 +198,7 @@ class Invoice(models.Model):
     total_prof_service_price = models.DecimalField(max_digits=100, decimal_places=2, null=True, blank=True)
 
     number = models.CharField(null=True, blank=True, max_length=100)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="invoice_event", blank=True,null=True)
 
     #RELATED fields
     case = models.OneToOneField(Case, blank=True, null=True, on_delete=models.SET_NULL)
